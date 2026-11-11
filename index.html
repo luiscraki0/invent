@@ -6,99 +6,216 @@
 <title>Inventario del taller</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&display=swap">
 <style>
-:root{--bg:#eef1ec;--surf:#fff;--ink:#1b2a2b;--mute:#5d6b6a;--line:#cdd5cf;--tape:#f2b81b;--low:#c23b2a;--ok:#2f7d5b;
-box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121a1b;--surf:#1b2626;--ink:#e8eeea;--mute:#9aa9a7;--line:#2e3c3d;--low:#ff7a66;--ok:#5fc596}}
-:root[data-theme="dark"]{--bg:#121a1b;--surf:#1b2626;--ink:#e8eeea;--mute:#9aa9a7;--line:#2e3c3d;--low:#ff7a66;--ok:#5fc596}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
-*,*::before,*::after{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.45 "Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif}
-.wrap{max-width:860px;margin:0 auto;padding:0 16px 48px}
-.tape{background:var(--tape);color:#1b2a2b;margin:0 -16px;padding:22px 16px 30px;position:relative}
-.tape::after{content:"";position:absolute;left:0;right:0;bottom:0;height:14px;background:repeating-linear-gradient(90deg,#1b2a2b 0 2px,transparent 2px 10px),repeating-linear-gradient(90deg,#1b2a2b 0 2px,transparent 2px 50px);background-size:100% 8px,100% 14px;background-repeat:repeat-x;background-position:0 100%}
-.tape .in{max-width:828px;margin:0 auto}
-h1{margin:0;font-size:clamp(28px,6vw,44px);line-height:1.05;font-weight:800;letter-spacing:-.02em}
-.tape p{margin:6px 0 0;font-weight:500}
-.stats{display:flex;gap:28px;flex-wrap:wrap;padding:18px 0 6px}
-.stats b{display:block;font-size:30px;line-height:1.1;font-weight:700}
-.stats span{color:var(--mute);font-size:14px}
-.stats .warn b{color:var(--low)}
-.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:14px 0}
-input,select,button{font:inherit;color:inherit}
-input,select{background:var(--surf);border:1px solid var(--line);border-radius:6px;padding:9px 10px;width:100%}
-.bar input{flex:1 1 200px;width:auto}
-button{cursor:pointer;background:var(--surf);border:1px solid var(--line);border-radius:6px;padding:8px 12px}
-button:hover{border-color:var(--ink)}
-:focus-visible{outline:3px solid var(--tape);outline-offset:2px}
-.primary{background:var(--ink);color:var(--bg);border-color:var(--ink);font-weight:600}
-.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
-.chips button{border-radius:99px;padding:5px 12px;font-size:14px}
-.chips button[aria-pressed="true"]{background:var(--tape);border-color:var(--tape);color:#1b2a2b;font-weight:600}
-.chk{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--mute)}
-.chk input{width:auto}
-#panel{background:var(--surf);border:1px solid var(--line);border-left:6px solid var(--tape);border-radius:6px;padding:16px;margin:0 0 16px}
-#panel[hidden]{display:none}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
-label{display:block;font-size:14px;color:var(--mute)}
-label input,label select{margin-top:4px;color:var(--ink)}
-.full{grid-column:1/-1}
-.btns{display:flex;gap:8px;margin-top:14px}
-#err{color:var(--low);font-size:14px;margin:10px 0 0;min-height:1em}
-ul{list-style:none;margin:0;padding:0}
-.row{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(90px,1fr) auto auto;gap:6px 16px;align-items:center;background:var(--surf);border:1px solid var(--line);border-left:6px solid var(--ok);border-radius:6px;padding:12px 14px;margin-bottom:8px}
-.row.low{border-left-color:var(--low)}
-.nm strong{display:block;font-weight:600}
-.nm small{color:var(--mute);font-size:13px}
-.tag{color:var(--low);font-weight:600}
-.gauge{position:relative;height:14px;background:repeating-linear-gradient(90deg,var(--line) 0 1px,transparent 1px 8px);border-bottom:2px solid var(--line)}
-.gauge i{position:absolute;left:0;bottom:0;height:8px;background:var(--ok)}
-.low .gauge i{background:var(--low)}
-.gauge u{position:absolute;left:50%;top:0;bottom:-2px;width:2px;background:var(--ink);text-decoration:none}
-.qty{display:flex;align-items:center;gap:8px;white-space:nowrap}
-.qty button{width:34px;height:34px;padding:0;font-size:18px;line-height:1}
-.qty span{min-width:64px;text-align:center;font-weight:600}
-.act{display:flex;gap:6px}
-.act button{font-size:13px;padding:6px 9px}
-.empty{padding:28px 16px;text-align:center;color:var(--mute);border:1px dashed var(--line);border-radius:6px}
-.empty p{margin:0 0 12px}
-.legend{font-size:13px;color:var(--mute);margin:14px 0 0}
-@media (max-width:640px){.row{grid-template-columns:1fr auto}.gauge{grid-column:1/-1;order:3}.qty{order:2}.act{grid-column:1/-1;order:4}}
+/* Nueva Paleta de Colores - Modo Claro Corporativo */
+:root {
+  --bg: #f4f7f8;
+  --surf: #ffffff;
+  --sidebar-bg: #f8fafb;
+  --ink: #1e293b;
+  --mute: #64748b;
+  --line: #e2e8f0;
+  --primary: #0d6efd; /* Azul principal */
+  --primary-hover: #0b5ed7;
+  --low: #ef4444;
+  --low-bg: #fef2f2;
+  --ok: #10b981;
+  box-sizing: border-box;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 14px/1.5 "Bricolage Grotesque", system-ui, -apple-system, sans-serif;
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Layout: Sidebar y Contenido Principal */
+.app-container { display: flex; width: 100%; }
+
+.sidebar { width: 250px; background: var(--sidebar-bg); border-right: 1px solid var(--line); display: flex; flex-direction: column; }
+.sidebar-header { padding: 24px; font-size: 18px; font-weight: 800; color: var(--primary); border-bottom: 1px solid var(--line); }
+.sidebar nav { padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+.sidebar nav a { text-decoration: none; color: var(--mute); padding: 12px 16px; border-radius: 8px; font-weight: 600; display: flex; align-items: center; gap: 12px; transition: all 0.2s; }
+.sidebar nav a:hover { background: #eef2f6; color: var(--ink); }
+.sidebar nav a.active { background: #e0f2fe; color: var(--primary); }
+
+.main-content { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+
+/* Encabezado Superior */
+.top-header { background: var(--surf); padding: 20px 32px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
+.top-header h1 { margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -0.02em; display: flex; align-items: center; gap: 8px;}
+.top-header p { margin: 4px 0 0; color: var(--mute); font-size: 14px; font-weight: 500;}
+
+/* Área de Trabajo */
+.wrap { padding: 32px; max-width: 1200px; margin: 0 auto; width: 100%; }
+
+/* Tarjetas de Estadísticas (KPIs) */
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; margin-bottom: 32px; }
+.stats > div { background: var(--surf); padding: 24px; border-radius: 12px; border: 1px solid var(--line); box-shadow: 0 2px 8px rgba(0,0,0,0.03); display: flex; flex-direction: column; align-items: flex-start; }
+.stats b { font-size: 36px; line-height: 1; font-weight: 800; color: var(--ink); margin-bottom: 8px; }
+.stats span { color: var(--mute); font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.stats .warn b { color: var(--low); }
+
+/* Tarjeta de Controles y Filtros */
+.controls-card { background: var(--surf); padding: 20px 24px; border-radius: 12px; border: 1px solid var(--line); margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
+.bar { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
+input, select, button { font: inherit; color: inherit; outline: none; }
+input, select { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; transition: border-color 0.2s; }
+input:focus, select:focus { border-color: var(--primary); }
+.bar input[type="search"] { flex: 1; min-width: 250px; background: var(--surf); }
+.chk { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--mute); font-weight: 600; cursor: pointer; }
+.chk input { width: 18px; height: 18px; cursor: pointer; }
+
+/* Botones */
+button { cursor: pointer; background: var(--surf); border: 1px solid var(--line); border-radius: 8px; padding: 10px 16px; font-weight: 600; transition: all 0.2s; }
+button:hover { background: var(--bg); }
+.primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+.primary:hover { background: var(--primary-hover); border-color: var(--primary-hover); color: #fff; }
+
+/* Chips de Categorías */
+.chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.chips button { border-radius: 20px; padding: 6px 16px; font-size: 13px; border: 1px solid transparent; background: var(--bg); color: var(--mute); }
+.chips button:hover { background: var(--line); color: var(--ink); }
+.chips button[aria-pressed="true"] { background: #e0f2fe; color: var(--primary); font-weight: 700; }
+
+/* Formulario (Panel) */
+#panel { background: var(--surf); border: 1px solid var(--line); border-left: 6px solid var(--primary); border-radius: 12px; padding: 24px; margin: 0 0 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+#panel[hidden] { display: none; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+label { display: block; font-size: 13px; color: var(--mute); font-weight: 600; }
+label input, label select { margin-top: 6px; width: 100%; color: var(--ink); }
+.full { grid-column: 1 / -1; }
+.btns { display: flex; gap: 12px; margin-top: 24px; }
+#err { color: var(--low); font-size: 14px; margin: 12px 0 0; font-weight: 500; }
+
+/* Listado de Artículos (Tabla estilo Cards) */
+ul { list-style: none; margin: 0; padding: 0; }
+.row { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(150px, 1fr) auto auto; gap: 16px 24px; align-items: center; background: var(--surf); border: 1px solid var(--line); border-left: 4px solid var(--ok); border-radius: 10px; padding: 16px 20px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); transition: transform 0.15s, box-shadow 0.15s; }
+.row:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(0,0,0,0.06); }
+.row.low { border-left-color: var(--low); background: var(--low-bg); }
+
+.nm strong { display: block; font-weight: 700; font-size: 15px; margin-bottom: 4px; color: var(--ink); }
+.nm small { color: var(--mute); font-size: 13px; }
+.tag { background: #fee2e2; color: var(--low); padding: 2px 6px; border-radius: 4px; font-size: 11px; text-transform: uppercase; font-weight: 800; margin-left: 6px; }
+
+/* Barra de progreso simplificada */
+.gauge { position: relative; height: 8px; background: var(--line); border-radius: 4px; overflow: hidden; }
+.gauge i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--ok); border-radius: 4px; }
+.low .gauge i { background: var(--low); }
+.gauge u { display: none; }
+
+.qty { display: flex; align-items: center; justify-content: space-between; background: var(--bg); padding: 4px; border-radius: 8px; border: 1px solid var(--line); }
+.qty button { width: 32px; height: 32px; padding: 0; font-size: 20px; line-height: 1; border: none; background: transparent; display: flex; align-items: center; justify-content: center; color: var(--mute); }
+.qty button:hover { background: #d1d5db; color: var(--ink); }
+.qty span { min-width: 60px; text-align: center; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+.act { display: flex; gap: 8px; }
+.act button { font-size: 13px; padding: 8px 12px; }
+
+.empty { padding: 48px 24px; text-align: center; color: var(--mute); border: 2px dashed var(--line); border-radius: 12px; background: #fafafa; }
+.empty p { margin: 0 0 16px; font-size: 15px; }
+.legend { font-size: 13px; color: var(--mute); margin: 24px 0 0; text-align: center; font-weight: 500;}
+
+/* Diseño Responsivo */
+@media (max-width: 900px) {
+  .app-container { flex-direction: column; }
+  .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--line); }
+  .sidebar nav { flex-direction: row; overflow-x: auto; padding: 12px 24px; }
+  .sidebar nav a { white-space: nowrap; }
+  .row { grid-template-columns: 1fr; gap: 12px; }
+  .gauge { order: 3; margin: 8px 0; }
+  .qty { order: 2; width: max-content; }
+  .act { order: 4; justify-content: flex-start; }
+  .top-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .top-header button { width: 100%; }
+}
 </style>
 </head>
 <body>
-<div class="tape"><div class="in">
-<h1>Inventario del taller</h1>
-<p>Materiales, herramientas y repuestos al día.</p>
-</div></div>
-<div class="wrap">
-<div class="stats" id="stats"></div>
-<div class="bar">
-<input id="q" type="search" placeholder="Buscar artículo" aria-label="Buscar artículo">
-<label class="chk"><input type="checkbox" id="low"> Solo por reponer</label>
-<button class="primary" id="add">Agregar artículo</button>
+
+<div class="app-container">
+  <!-- Navegación Lateral -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      Mi Taller
+    </div>
+    <nav>
+      <a href="#" class="active">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+        Inventario General
+      </a>
+      <!-- Enlaces decorativos para mantener la estructura de la referencia -->
+      <a href="#">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+        Reportes
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Contenido Principal -->
+  <main class="main-content">
+    
+    <!-- Encabezado Superior -->
+    <header class="top-header">
+      <div>
+        <h1>Hola, Equipo 👋</h1>
+        <p id="current-date">Cargando fecha...</p>
+      </div>
+      <!-- El botón Agregar se movió aquí arriba para mayor jerarquía -->
+      <button class="primary" id="add">+ Nuevo Artículo</button>
+    </header>
+
+    <div class="wrap">
+      <!-- Tarjetas Resumen (KPIs) -->
+      <div class="stats" id="stats"></div>
+
+      <!-- Controles y Filtros -->
+      <div class="controls-card">
+        <div class="bar">
+          <input id="q" type="search" placeholder="Buscar artículo..." aria-label="Buscar artículo">
+          <label class="chk"><input type="checkbox" id="low"> Solo por reponer</label>
+        </div>
+        <div class="chips" id="chips"></div>
+      </div>
+
+      <!-- Panel de Formulario Oculto -->
+      <div id="panel" hidden>
+        <div class="grid">
+          <label class="full">Nombre<input id="f-name" placeholder="Ej.: Cable 12 AWG, hilo de bordar, silicona"></label>
+          <label>Categoría<select id="f-cat"></select></label>
+          <label>Cantidad actual<input id="f-qty" type="number" min="0" step="any" inputmode="decimal"></label>
+          <label>Unidad de medida<input id="f-unit" placeholder="uds, m, kg, rollos"></label>
+          <label>Punto de reorden (Min)<input id="f-min" type="number" min="0" step="any" inputmode="decimal"></label>
+          <label>Costo por unidad ($)<input id="f-cost" type="number" min="0" step="any" inputmode="decimal"></label>
+          <label>Precio de venta ($)<input id="f-price" type="number" min="0" step="any" inputmode="decimal"></label>
+        </div>
+        <p id="err" role="alert"></p>
+        <div class="btns">
+          <button class="primary" id="save">Guardar artículo</button>
+          <button id="cancel">Cancelar</button>
+        </div>
+      </div>
+
+      <!-- Lista de Artículos -->
+      <ul id="list"></ul>
+      
+      <p class="legend">Los datos se guardan localmente en este navegador.</p>
+    </div>
+  </main>
 </div>
-<div class="chips" id="chips"></div>
-<div id="panel" hidden>
-<div class="grid">
-<label class="full">Nombre<input id="f-name" placeholder="Ej.: Cable 12 AWG, hilo de bordar, silicona"></label>
-<label>Categoría<select id="f-cat"></select></label>
-<label>Cantidad<input id="f-qty" type="number" min="0" step="any" inputmode="decimal"></label>
-<label>Unidad<input id="f-unit" placeholder="uds, m, kg, rollos"></label>
-<label>Avisar al llegar a<input id="f-min" type="number" min="0" step="any" inputmode="decimal"></label>
-<label>Costo por unidad ($)<input id="f-cost" type="number" min="0" step="any" inputmode="decimal"></label>
-<label>Precio de venta ($)<input id="f-price" type="number" min="0" step="any" inputmode="decimal"></label>
-</div>
-<p id="err" role="alert"></p>
-<div class="btns"><button class="primary" id="save">Guardar artículo</button><button id="cancel">Cancelar</button></div>
-</div>
-<ul id="list"></ul>
-<p class="legend">La marca negra de la regla indica el punto de aviso. Los datos se guardan en este navegador.</p>
-</div>
+
 <script>
 (function(){
 var KEY='inventario-taller-v1',CATS=['Materiales','Herramientas','Repuestos','Productos terminados'];
 var items=[],cat='Todos',q='',onlyLow=false,editId=null,delId=null;
 function $(i){return document.getElementById(i)}
+
+// Inicializar fecha dinámica en el header
+$('current-date').textContent = new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }).replace(/^\w/, c => c.toUpperCase());
+
 function load(){try{items=JSON.parse(localStorage.getItem(KEY)||'[]')||[]}catch(e){items=[]}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(items))}catch(e){}}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
@@ -107,28 +224,31 @@ function num(n){return Math.round(n*100)/100}
 function seed(){
 var d=[['Hilo de bordar',0,40,'madejas',10,0.5,1.2],['Silicona en barra',0,3,'barras',12,0.25,0.6],['Taladro inalámbrico',1,1,'uds',1,55,0],['Tornillos 6 x 1 pulg.',2,120,'uds',50,0.04,0.1],['Cable eléctrico 12 AWG',2,8,'m',15,0.9,1.8],['Velas decorativas',3,6,'uds',4,2.5,8]];
 items=d.map(function(x,i){return{id:Date.now()+i,name:x[0],cat:CATS[x[1]],qty:x[2],unit:x[3],min:x[4],cost:x[5],price:x[6]}});save();render()}
+
 function render(){
 var tot=items.length,nl=items.filter(function(i){return i.qty<=i.min}).length;
 var val=items.reduce(function(s,i){return s+i.qty*i.cost},0);
-$('stats').innerHTML='<div><b>'+tot+'</b><span>artículos</span></div><div class="'+(nl?'warn':'')+'"><b>'+nl+'</b><span>por reponer</span></div><div><b>'+money(val)+'</b><span>valor en stock</span></div>';
+$('stats').innerHTML='<div><b>'+tot+'</b><span>Artículos</span></div><div class="'+(nl?'warn':'')+'"><b>'+nl+'</b><span>Por reponer</span></div><div><b>'+money(val)+'</b><span>Valor en stock</span></div>';
 $('chips').innerHTML=['Todos'].concat(CATS).map(function(c){return '<button data-cat="'+c+'" aria-pressed="'+(c===cat)+'">'+c+'</button>'}).join('');
 var ql=q.trim().toLowerCase();
 var v=items.filter(function(i){return (cat==='Todos'||i.cat===cat)&&(!onlyLow||i.qty<=i.min)&&(!ql||i.name.toLowerCase().indexOf(ql)>-1)});
 if(!v.length){
-$('list').innerHTML='<li class="empty">'+(items.length?'<p>No hay artículos con ese filtro.</p>':'<p>Todavía no hay artículos. Agrega el primero o carga ejemplos para ver cómo funciona.</p><button data-a="seed">Cargar ejemplos</button>')+'</li>';return}
+$('list').innerHTML='<li class="empty">'+(items.length?'<p>No hay artículos con ese filtro.</p>':'<p>Todavía no hay artículos. Agrega el primero o carga ejemplos para ver cómo funciona.</p><button class="primary" data-a="seed">Cargar ejemplos</button>')+'</li>';return}
 $('list').innerHTML=v.map(function(i){
 var low=i.qty<=i.min,pct=Math.max(0,Math.min(100,i.qty/Math.max(i.min*2,1)*100));
 var meta=esc(i.cat)+', '+money(i.cost)+' c/u'+(i.price?', venta '+money(i.price):'');
 return '<li class="row'+(low?' low':'')+'"><div class="nm"><strong>'+esc(i.name)+'</strong><small>'+meta+(low?' <span class="tag">Reponer</span>':'')+'</small></div>'
 +'<div class="gauge" role="img" aria-label="Stock '+num(i.qty)+' de aviso '+num(i.min)+'"><i style="width:'+pct+'%"></i><u></u></div>'
 +'<div class="qty"><button data-a="dec" data-id="'+i.id+'" aria-label="Restar uno">−</button><span>'+num(i.qty)+' '+esc(i.unit||'')+'</span><button data-a="inc" data-id="'+i.id+'" aria-label="Sumar uno">+</button></div>'
-+'<div class="act"><button data-a="edit" data-id="'+i.id+'">Editar</button><button data-a="del" data-id="'+i.id+'">'+(delId===i.id?'¿Eliminar?':'Eliminar')+'</button></div></li>'}).join('')}
++'<div class="act"><button data-a="edit" data-id="'+i.id+'">Editar</button><button data-a="del" data-id="'+i.id+'">'+(delId===i.id?'¿Seguro?':'Eliminar')+'</button></div></li>'}).join('')}
+
 function openPanel(it){
 editId=it?it.id:null;$('err').textContent='';
 $('f-name').value=it?it.name:'';$('f-cat').value=it?it.cat:CATS[0];$('f-qty').value=it?it.qty:'';
 $('f-unit').value=it?it.unit:'';$('f-min').value=it?it.min:'';$('f-cost').value=it?it.cost:'';$('f-price').value=it&&it.price?it.price:'';
 $('panel').hidden=false;$('f-name').focus()}
 function closePanel(){$('panel').hidden=true;editId=null}
+
 function commit(){
 var name=$('f-name').value.trim(),qty=parseFloat($('f-qty').value);
 if(!name){$('err').textContent='Escribe el nombre del artículo.';return}
@@ -136,6 +256,7 @@ if(isNaN(qty)||qty<0){$('err').textContent='Escribe la cantidad que tienes ahora
 var o={name:name,cat:$('f-cat').value,qty:qty,unit:$('f-unit').value.trim(),min:parseFloat($('f-min').value)||0,cost:parseFloat($('f-cost').value)||0,price:parseFloat($('f-price').value)||0};
 if(editId){items=items.map(function(i){return i.id===editId?Object.assign({},i,o):i})}else{o.id=Date.now();items.unshift(o)}
 save();closePanel();render()}
+
 $('f-cat').innerHTML=CATS.map(function(c){return '<option>'+c+'</option>'}).join('');
 $('add').onclick=function(){openPanel(null)};$('cancel').onclick=closePanel;$('save').onclick=commit;
 $('q').oninput=function(e){q=e.target.value;render()};
@@ -151,6 +272,7 @@ else if(a==='dec'){it.qty=Math.max(0,num(it.qty-1))}
 else if(a==='edit'){openPanel(it);return}
 else if(a==='del'){if(delId===id){items=items.filter(function(i){return i.id!==id});delId=null}else{delId=id;render();return}}
 delId=null;save();render()};
+
 load();render();
 })();
 </script>
