@@ -6,9 +6,11 @@
 <title>Mi Taller - Panel de Control</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&display=swap">
 <style>
-/* Paleta de Colores Fresca y Moderna */
 :root {
-  --bg: #f0f9f9; --surf: #ffffff; --sidebar-bg: #ffffff; --ink: #0f172a; --mute: #64748b;
+  --bg: #f0f9f9; --surf: #ffffff; 
+  /* Nuevo color de sidebar: un cian/menta muy suave y desaturado */
+  --sidebar-bg: #e6f7f8; 
+  --ink: #0f172a; --mute: #64748b;
   --line: #e2e8f0; --primary: #06b6d4; --accent: #3b82f6; --low: #f43f5e; --low-bg: #fff1f2; --ok: #10b981;
   box-sizing: border-box;
 }
@@ -21,8 +23,15 @@ body { margin: 0; background: var(--bg); color: var(--ink); font: 400 14px/1.5 "
 .sidebar-header { padding: 24px; font-size: 20px; font-weight: 800; color: var(--primary); border-bottom: 1px solid var(--line); letter-spacing: -0.5px; }
 .sidebar nav { padding: 16px; display: flex; flex-direction: column; gap: 8px; }
 .sidebar nav a { text-decoration: none; color: var(--mute); padding: 12px 16px; border-radius: 12px; font-weight: 600; display: flex; align-items: center; gap: 12px; transition: all 0.2s ease; cursor: pointer; }
-.sidebar nav a:hover { background: var(--bg); color: var(--ink); transform: translateX(4px); }
+.sidebar nav a:hover { background: rgba(255,255,255,0.5); color: var(--ink); transform: translateX(4px); }
 .sidebar nav a.active { background: var(--primary); color: #fff; box-shadow: 0 4px 12px rgba(6, 182, 212, 0.2); transform: none; }
+
+/* Submenú de Inventario */
+.sub-nav { display: none; flex-direction: column; gap: 4px; padding-left: 44px; margin-top: -4px; margin-bottom: 8px; }
+.sub-nav.active { display: flex; }
+.sub-nav button { background: transparent; border: none; padding: 6px 12px; text-align: left; font-size: 13px; font-weight: 600; color: var(--mute); border-radius: 8px; cursor: pointer; box-shadow: none; }
+.sub-nav button:hover { background: rgba(255,255,255,0.6); color: var(--ink); transform: none; }
+.sub-nav button[aria-pressed="true"] { color: var(--primary); font-weight: 800; background: transparent; }
 
 .main-content { flex: 1; display: flex; flex-direction: column; min-width: 0; }
 .top-header { background: var(--surf); padding: 20px 32px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
@@ -55,15 +64,10 @@ input:focus, select:focus { border-color: var(--primary); background: var(--surf
 .mock-bar { background: var(--primary); border-radius: 6px 6px 0 0; width: 100%; opacity: 0.8; transition: height 0.3s; }
 
 /* VISTA 2: Inventario */
-.controls-card { background: var(--surf); padding: 20px 24px; border-radius: 20px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
-.bar { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
-.bar input[type="search"] { flex: 1; min-width: 250px; }
-.chk { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
+.controls-card { background: var(--surf); padding: 20px 24px; border-radius: 20px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); display: flex; gap: 16px; align-items: center; }
+.controls-card input[type="search"] { flex: 1; min-width: 200px; margin: 0; }
+.chk { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; cursor: pointer; margin: 0; }
 .chk input { width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary); }
-.chips { display: flex; gap: 8px; flex-wrap: wrap; }
-.chips button { border-radius: 99px; padding: 8px 18px; font-size: 13px; border: 1px solid transparent; background: var(--bg); color: var(--mute); font-weight: 600; }
-.chips button:hover { background: #e2e8f0; color: var(--ink); transform: none; box-shadow: none; }
-.chips button[aria-pressed="true"] { background: var(--ink); color: #fff; }
 
 .panel-form { background: var(--surf); border: none; border-radius: 24px; padding: 32px; margin: 0 0 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); position: relative; overflow: hidden; }
 .panel-form::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px; background: linear-gradient(90deg, var(--primary), var(--accent)); }
@@ -114,6 +118,7 @@ ul { list-style: none; margin: 0; padding: 0; }
   .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--line); }
   .sidebar nav { flex-direction: row; overflow-x: auto; padding: 12px 24px; }
   .sidebar nav a { white-space: nowrap; }
+  .controls-card { flex-direction: column; align-items: stretch; }
   .dashboard-visuals { grid-template-columns: 1fr; }
   .row { grid-template-columns: 1fr; gap: 16px; padding: 16px; }
   .gauge { order: 3; margin: 8px 0; }
@@ -132,9 +137,17 @@ ul { list-style: none; margin: 0; padding: 0; }
       <a class="nav-link active" data-target="dashboard" data-title="Panel de Control" data-subtitle="Estadísticas y resumen de tu negocio.">
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg> Panel de Control
       </a>
-      <a class="nav-link" data-target="inventory" data-title="Inventario General" data-subtitle="Materiales, herramientas y repuestos al día.">
+      
+      <!-- Opción de Inventario con Submenú -->
+      <a class="nav-link" data-target="inventory" data-title="Inventario General" data-subtitle="Materiales y herramientas al día." id="nav-inventory">
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg> Inventario
       </a>
+      <div class="sub-nav" id="inv-subnav">
+        <button data-cat="Todos" aria-pressed="true">Todos</button>
+        <button data-cat="Materiales">Materiales</button>
+        <button data-cat="Herramientas">Herramientas</button>
+      </div>
+
       <a class="nav-link" data-target="projects" data-title="Proyectos Activos" data-subtitle="Gestiona tus trabajos y clientes.">
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg> Proyectos
       </a>
@@ -181,11 +194,8 @@ ul { list-style: none; margin: 0; padding: 0; }
       <!-- VISTA 2: INVENTARIO -->
       <section id="inventory" class="view">
         <div class="controls-card">
-          <div class="bar">
-            <input id="q" type="search" placeholder="Buscar artículo..." aria-label="Buscar artículo">
-            <label class="chk"><input type="checkbox" id="low"> Solo por reponer</label>
-          </div>
-          <div class="chips" id="chips"></div>
+          <input id="q" type="search" placeholder="Buscar artículo..." aria-label="Buscar artículo">
+          <label class="chk"><input type="checkbox" id="low"> Solo por reponer</label>
         </div>
 
         <div id="panel" class="panel-form" hidden>
@@ -209,8 +219,6 @@ ul { list-style: none; margin: 0; padding: 0; }
 
       <!-- VISTA 3: PROYECTOS -->
       <section id="projects" class="view">
-        
-        <!-- Formulario Nuevo Proyecto -->
         <div id="proj-panel" class="panel-form" hidden style="margin-bottom: 32px;">
           <div class="grid">
             <label class="full">Nombre del Cliente / Trabajo<input id="p-name" placeholder="Ej.: Instalación eléctrica local central"></label>
@@ -225,7 +233,6 @@ ul { list-style: none; margin: 0; padding: 0; }
         </div>
 
         <div class="projects-grid" id="projects-list">
-          <!-- Tarjetas renderizadas por JS -->
         </div>
       </section>
 
@@ -236,174 +243,4 @@ ul { list-style: none; margin: 0; padding: 0; }
 <script>
 (function(){
 function $(i){return document.getElementById(i)}
-function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
-function money(n){return '$'+(Number(n)||0).toFixed(2)}
-function num(n){return Math.round(n*100)/100}
-
-// --- LOGICA SPA (Pestañas) ---
-const navLinks = document.querySelectorAll('.nav-link');
-const views = document.querySelectorAll('.view');
-const pageTitle = $('page-title');
-const pageSubtitle = $('page-subtitle');
-const btnGlobalAdd = $('btn-global-add');
-
-navLinks.forEach(link => {
-  link.addEventListener('click', (e) => {
-    e.preventDefault();
-    navLinks.forEach(l => l.classList.remove('active'));
-    link.classList.add('active');
-    pageTitle.textContent = link.getAttribute('data-title');
-    pageSubtitle.textContent = link.getAttribute('data-subtitle');
-    const targetId = link.getAttribute('data-target');
-    views.forEach(v => v.classList.remove('active'));
-    $(targetId).classList.add('active');
-
-    if (targetId === 'inventory') {
-      btnGlobalAdd.style.display = 'block';
-      btnGlobalAdd.textContent = '+ Nuevo Artículo';
-      btnGlobalAdd.onclick = () => { $('panel').hidden = false; $('f-name').focus(); };
-    } else {
-      btnGlobalAdd.style.display = 'none';
-    }
-  });
-});
-
-// --- LOGICA INVENTARIO ---
-var KEY='inventario-taller-v1', CATS=['Materiales','Herramientas','Repuestos','Productos terminados'];
-var items=[], cat='Todos', q='', onlyLow=false, editId=null;
-
-function load(){try{items=JSON.parse(localStorage.getItem(KEY)||'[]')||[]}catch(e){items=[]}}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(items))}catch(e){}}
-function render(){
-  var tot=items.length, nl=items.filter(i=>i.qty<=i.min).length, val=items.reduce((s,i)=>s+i.qty*i.cost,0);
-  $('stats').innerHTML='<div><b>'+tot+'</b><span>Artículos</span></div><div class="'+(nl?'warn':'')+'"><b>'+nl+'</b><span>Por reponer</span></div><div><b>'+money(val)+'</b><span>Valor stock</span></div>';
-  $('chips').innerHTML=['Todos'].concat(CATS).map(c=>'<button data-cat="'+c+'" aria-pressed="'+(c===cat)+'">'+c+'</button>').join('');
-  var ql=q.trim().toLowerCase();
-  var v=items.filter(i=>(cat==='Todos'||i.cat===cat)&&(!onlyLow||i.qty<=i.min)&&(!ql||i.name.toLowerCase().indexOf(ql)>-1));
-  if(!v.length){
-    $('list').innerHTML='<li style="padding:40px;text-align:center;border:2px dashed var(--line);border-radius:16px;color:var(--mute);">'+(items.length?'No hay resultados.':'Sin artículos.')+'</li>'; return;
-  }
-  $('list').innerHTML=v.map(i=>{
-    var low=i.qty<=i.min, pct=Math.max(0,Math.min(100,i.qty/Math.max(i.min*2,1)*100));
-    var meta=esc(i.cat)+', '+money(i.cost)+' c/u'+(i.price?', venta '+money(i.price):'');
-    return '<li class="row'+(low?' low':'')+'"><div class="nm"><strong>'+esc(i.name)+'</strong><small>'+meta+(low?' <span class="tag">Reponer</span>':'')+'</small></div>'
-    +'<div class="gauge"><i style="width:'+pct+'%"></i></div>'
-    +'<div class="qty"><button data-a="dec" data-id="'+i.id+'">−</button><span>'+num(i.qty)+' '+esc(i.unit||'')+'</span><button data-a="inc" data-id="'+i.id+'">+</button></div>'
-    +'<div class="act"><button data-a="edit" data-id="'+i.id+'">Editar</button><button data-a="del" data-id="'+i.id+'">Eliminar</button></div></li>'
-  }).join('');
-}
-$('f-cat').innerHTML=CATS.map(c=>'<option>'+c+'</option>').join('');
-$('cancel').onclick=()=>{ $('panel').hidden=true; editId=null; };
-$('save').onclick=()=>{
-  var name=$('f-name').value.trim(), qty=parseFloat($('f-qty').value);
-  if(!name){ $('err').textContent='Falta nombre.'; return; }
-  if(isNaN(qty)||qty<0){ $('err').textContent='Cantidad inválida.'; return; }
-  var o={id:editId||Date.now(), name:name, cat:$('f-cat').value, qty:qty, unit:$('f-unit').value.trim(), min:parseFloat($('f-min').value)||0, cost:parseFloat($('f-cost').value)||0, price:parseFloat($('f-price').value)||0};
-  if(editId) items=items.map(i=>i.id===editId?o:i); else items.unshift(o);
-  save(); $('panel').hidden=true; editId=null; render();
-};
-$('q').oninput=e=>{ q=e.target.value; render(); };
-$('low').onchange=e=>{ onlyLow=e.target.checked; render(); };
-$('chips').onclick=e=>{ var b=e.target.closest('button'); if(b){ cat=b.getAttribute('data-cat'); render(); }};
-$('list').onclick=e=>{
-  var b=e.target.closest('button'); if(!b) return;
-  var a=b.getAttribute('data-a'), id=Number(b.getAttribute('data-id')), it=items.find(i=>i.id===id);
-  if(!it) return;
-  if(a==='inc') it.qty=num(it.qty+1);
-  else if(a==='dec') it.qty=Math.max(0,num(it.qty-1));
-  else if(a==='edit'){
-    editId=it.id; $('err').textContent=''; $('f-name').value=it.name; $('f-cat').value=it.cat; $('f-qty').value=it.qty;
-    $('f-unit').value=it.unit; $('f-min').value=it.min; $('f-cost').value=it.cost; $('f-price').value=it.price||'';
-    $('panel').hidden=false; $('f-name').focus(); return;
-  }
-  else if(a==='del'){ if(confirm('¿Eliminar artículo?')){ items=items.filter(i=>i.id!==id); } }
-  save(); render();
-};
-
-// --- LOGICA PROYECTOS ---
-var PROJ_KEY = 'proyectos-taller-v1';
-var projs = [];
-
-function loadProjs(){
-  try{ projs = JSON.parse(localStorage.getItem(PROJ_KEY))||[]; }catch(e){ projs = []; }
-  if(projs.length === 0){ // Datos de ejemplo iniciales
-    projs = [
-      { id: Date.now(), name: 'Instalación Eléctrica Local', status: 'active', progress: 65, budget: 1200 },
-      { id: Date.now()+1, name: 'Mantenimiento Aires', status: 'pending', progress: 20, budget: 450 }
-    ];
-    saveProjs();
-  }
-}
-function saveProjs(){ localStorage.setItem(PROJ_KEY, JSON.stringify(projs)); }
-
-function renderProjs(){
-  var html = '';
-  projs.forEach(p => {
-    let sClass = p.status === 'active' ? 'active' : (p.status === 'pending' ? 'pending' : 'done');
-    let sText = p.status === 'active' ? 'En Proceso' : (p.status === 'pending' ? 'Pendiente' : 'Terminado');
-    let sColor = p.status === 'active' ? 'var(--primary)' : (p.status === 'pending' ? '#eab308' : '#10b981');
-    html += `<div class="project-card">
-      <button class="btn-del-proj" data-id="${p.id}" title="Eliminar proyecto">✕</button>
-      <h3>${esc(p.name)}</h3>
-      <span class="status ${sClass}" data-id="${p.id}" title="Clic para cambiar estado">${sText} ↻</span>
-      <div class="project-progress"><div class="fill" style="width: ${p.progress}%; background: ${sColor};"></div></div>
-      <p><span>Progreso: ${p.progress}%</span> <strong style="color: var(--ink)">${money(p.budget)}</strong></p>
-    </div>`;
-  });
-  html += `<div class="project-card new-project" id="btn-new-proj">
-    <div><svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-bottom: 8px;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg><br>Crear nuevo trabajo</div>
-  </div>`;
-  $('projects-list').innerHTML = html;
-}
-
-$('projects-list').onclick = e => {
-  // Abrir panel nuevo proyecto
-  if(e.target.closest('#btn-new-proj')){
-    $('proj-panel').hidden = false;
-    $('p-name').focus();
-    $('p-err').textContent = '';
-  }
-  // Cambiar estado con un clic
-  if(e.target.classList.contains('status')){
-    let id = Number(e.target.getAttribute('data-id'));
-    let p = projs.find(x => x.id === id);
-    if(p){
-      p.status = p.status === 'pending' ? 'active' : (p.status === 'active' ? 'done' : 'pending');
-      if(p.status === 'done') p.progress = 100; // Autocompletar progreso
-      saveProjs(); renderProjs();
-    }
-  }
-  // Eliminar proyecto
-  if(e.target.classList.contains('btn-del-proj')){
-    if(confirm('¿Eliminar este trabajo?')){
-      let id = Number(e.target.getAttribute('data-id'));
-      projs = projs.filter(x => x.id !== id);
-      saveProjs(); renderProjs();
-    }
-  }
-};
-
-$('p-cancel').onclick = () => { $('proj-panel').hidden = true; };
-$('p-save').onclick = () => {
-  let name = $('p-name').value.trim();
-  let bud = parseFloat($('p-budget').value) || 0;
-  let prog = parseFloat($('p-progress').value) || 0;
-  if(!name){ $('p-err').textContent = 'Falta el nombre del trabajo.'; return; }
-  projs.push({ id: Date.now(), name: name, status: 'pending', budget: bud, progress: prog });
-  saveProjs();
-  $('p-name').value = ''; $('p-budget').value = ''; $('p-progress').value = '';
-  $('proj-panel').hidden = true;
-  renderProjs();
-};
-
-// Inicialización
-load(); render();
-loadProjs(); renderProjs();
-})();
-</script>
-</body>
-</html>
-})();
-</script>
-</body>
-</html>
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'
